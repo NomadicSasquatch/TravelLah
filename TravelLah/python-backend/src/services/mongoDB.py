@@ -27,19 +27,24 @@ class MongoDB:
         
 
 
-    def update(self, trip_id: str, activity_id: int, updated_activity: dict) -> bool:
+    def update(self, updated_activity: dict) -> bool:
         """
         Update the activity within a trip's itinerary.
 
         Parameters:
-            trip_id (str): The trip's identifier (e.g., tripSerialNo).
-            activity_id (int): The ID of the activity to update.
-            updated_activity (dict): The new data for the activity.
+            updated_activity (dict): The new data for the activity. Must include
+                "tripSerialNo" (the trip's identifier) and
+                "activityId" (the ID of the activity to update),
+                plus any other keys for the activity fields.
 
         Returns:
             bool: True if the update was successful, False otherwise.
         """
         try:
+            # Extract the trip ID and activity ID from updated_activity
+            trip_id = updated_activity["tripSerialNo"]
+            activity_id = updated_activity["activityId"]
+
             # Use array filters to match the nested activity inside tripFlow.activityContent
             result = self.collection.update_one(
                 {
@@ -54,15 +59,18 @@ class MongoDB:
                     {"inner.activityId": activity_id}
                 ]
             )
+
             if result.modified_count > 0:
                 logger.info("Successfully updated activity %s in trip %s", activity_id, trip_id)
                 return True
             else:
                 logger.info("No document updated for trip %s and activity %s", trip_id, activity_id)
                 return False
+
         except Exception as e:
             logger.error("Error updating document: %s", e)
             return False
+
 
     def close(self):
         self.client.close()

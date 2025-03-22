@@ -1,0 +1,207 @@
+{
+    "userId": "U123",
+    "tripSerialNo": "T151",
+    "travelLocation": "Germany",
+    "latitude": 51.1657,
+    "longitude": 10.4515,
+    "startDate": "2025-04-01",
+    "endDate": "2025-04-05",
+    "tripFlow": [
+      {
+        "date": "2025-04-01",
+        "activityContent": [
+          {
+            "activityId": 1,
+            "specificLocation": "Hofbräuhaus",
+            "address": "Platzl 9, 80331 München, Germany",
+            "latitude": 48.1372,
+            "longitude": 11.5755,
+            "startTime": "12:00",
+            "endTime": "14:00",
+            "activityType": "indoor",
+            "notes": "Traditional Bavarian lunch at the famous Hofbräuhaus.  Enjoy the atmosphere and local beer."
+          },
+          {
+            "activityId": 2,
+            "specificLocation": "Marienplatz",
+            "address": "Marienplatz, 80331 München, Germany",
+            "latitude": 48.1374,
+            "longitude": 11.5764,
+            "startTime": "14:30",
+            "endTime": "16:30",
+            "activityType": "outdoor",
+            "notes": "Explore Marienplatz, the central square of Munich. Admire the architecture and the Glockenspiel show (check showtimes)."
+          },
+          {
+            "activityId": 3,
+            "specificLocation": "Deutsches Museum",
+            "address": "Museumsinsel 1, 80538 München, Germany",
+            "latitude": 48.1333,
+            "longitude": 11.5806,
+            "startTime": "17:00",
+            "endTime": "20:00",
+            "activityType": "indoor",
+            "notes": "Visit the Deutsches Museum, one of the world's largest science and technology museums. Allow ample time to explore."
+          },
+          {
+            "activityId": 4,
+            "specificLocation": "Augustiner-Keller",
+            "address": "Arnulfstraße 52, 80335 München, Germany",
+            "latitude": 48.1422,
+            "longitude": 11.5569,
+            "startTime": "20:30",
+            "endTime": "22:00",
+            "activityType": "indoor",
+            "notes": "Dinner at Augustiner-Keller, a traditional beer garden with indoor seating. Enjoy Bavarian cuisine and beer."
+          }
+        ]
+      },
+      {
+        "date": "2025-04-02",
+        "activityContent": [
+          {
+            "activityId": 1,
+            "specificLocation": "Neuschwanstein Castle",
+            "address": "87645 Schwangau, Germany",
+            "latitude": 47.558,
+            "longitude": 10.75,
+            "startTime": "9:00",
+            "endTime": "13:00",
+            "activityType": "outdoor",
+            "notes": "Day trip to Neuschwanstein Castle. Book tickets in advance to avoid long queues. Consider a guided tour."
+          },
+          {
+            "activityId": 2,
+            "specificLocation": "Restaurant near Neuschwanstein",
+            "address": "Various options near Neuschwanstein Castle",
+            "latitude": 47.558,
+            "longitude": 10.75,
+            "startTime": "13:30",
+            "endTime": "14:30",
+            "activityType": "indoor",
+            "notes": "Lunch at a restaurant near Neuschwanstein Castle. Many options are available, from casual to fine dining."
+          },
+          {
+            "activityId": 3,
+            "specificLocation": "Hohenschwangau Castle",
+            "address": "Alpseestraße 12, 87645 Schwangau, Germany",
+            "latitude": 47.556,
+            "longitude": 10.752,
+            "startTime": "15:00",
+            "endTime": "17:00",
+            "activityType": "outdoor",
+            "notes": "Visit Hohenschwangau Castle, located near Neuschwanstein. Explore the history and stunning views."
+          },
+          {
+            "activityId": 4,
+            "specificLocation": "Restaurant in Füssen",
+            "address": "Various options in Füssen",
+            "latitude": 47.56,
+            "longitude": 10.69,
+            "startTime": "19:00",
+            "endTime": "21:00",
+            "activityType": "indoor",
+            "notes": "Dinner in Füssen, a charming town near the castles. Enjoy local cuisine."
+          }
+        ]
+      },
+      {
+        "date": "2025-04-03",
+        "activityContent": [
+          {
+            "activityId": 1,
+            "specificLocation": "Cologne Cathedral",
+            "address": "Domkloster 4, 50667 Köln, Germany",
+            "latitude": 50.9413,
+            "longitude": 6.9581,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "activityType": "outdoor",
+            "notes": "Visit the magnificent Cologne Cathedral, a UNESCO World Heritage site. Explore the interior and climb the towers for panoramic views (optional)."
+          },
+          {
+            "activityId": 2,
+            "specificLocation": "Früh am Dom",
+            "address": "Domkloster 1, 50667 Köln, Germany",
+            "latitude": 50.9416,
+            "longitude": 6.9586,
+            "startTime": "12:30",
+            "endTime": "14:00",
+            "activityType": "indoor",
+            "notes": "Lunch at Früh am Dom, a traditional Kölsch brewery with a great location near the Cathedral."
+          },
+          {
+            "activityId": 3,
+            "specificLocation": "Römisch-Germanisches Museum",
+            "address": "Roncalliplatz 4, 50667 Köln, Germany",
+            "latitude": 50.9408,
+            "longitude": 6.9592,
+            "startTime": "14:30",
+            "endTime": "17:00",
+            "activityType": "indoor",
+            "notes": "Visit the Römisch-Germanisches Museum, showcasing Roman and early medieval artifacts found in Cologne."
+          },
+          {
+            "activityId": 4,
+            "specificLocation": "Restaurant in Cologne's Old Town",
+            "address": "Various options in Altstadt, Cologne",
+            "latitude": 50.94,
+            "longitude": 6.96,
+            "startTime": "19:00",
+            "endTime": "21:00",
+            "activityType": "indoor",
+            "notes": "Dinner in Cologne's Old Town. Explore the many restaurants offering diverse cuisines."
+          }
+        ]
+      },
+      {
+        "date": "2025-04-04",
+        "activityContent": [
+          {
+            "activityId": 1,
+            "specificLocation": "Chocolate Museum Cologne",
+            "address": "Am Schokoladenmuseum 1a, 50676 Köln, Germany",
+            "latitude": 50.9402,
+            "longitude": 6.9568,
+            "startTime": "10:00",
+            "endTime": "12:00",
+            "activityType": "indoor",
+            "notes": "Visit the Chocolate Museum, a fun and interactive experience for chocolate lovers."
+          },
+          {
+            "activityId": 2,
+            "specificLocation": "Rhine River Cruise",
+            "address": "Various departure points along the Rhine in Cologne",
+            "latitude": 50.94,
+            "longitude": 6.96,
+            "startTime": "12:30",
+            "endTime": "14:30",
+            "activityType": "outdoor",
+            "notes": "Enjoy a relaxing Rhine River cruise.  Many options are available, from short sightseeing trips to longer excursions."
+          },
+          {
+            "activityId": 3,
+            "specificLocation": "Botanical Garden Cologne",
+            "address": "Albertus-Magnus-Platz, 50931 Köln, Germany",
+            "latitude": 50.928,
+            "longitude": 6.96,
+            "startTime": "15:00",
+            "endTime": "17:00",
+            "activityType": "outdoor",
+            "notes": "Explore the beautiful Botanical Garden Cologne, offering a peaceful escape from the city."
+          },
+          {
+            "activityId": 4,
+            "specificLocation": "Local Restaurant near the Hotel",
+            "address": "Address will depend on hotel location",
+            "latitude": 0,
+            "longitude": 0,
+            "startTime": "19:00",
+            "endTime": "21:00",
+            "activityType": "indoor",
+            "notes": "Dinner at a local restaurant near your hotel.  This allows for flexibility and convenience."
+          }
+        ]
+      }
+    ]
+  }

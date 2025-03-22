@@ -95,7 +95,9 @@ class UpdateItineraryService:
             {"role": "user", "content": query_text}
         ]
         if retrieval_context:
-            messages.append({"role": "system", "content": f"Retrieved Context:\n{retrieval_context}"})
+            # Merge retrieval context directly into the first system message
+            messages[0]["content"] += f"\n\nRetrieved Context:\n{retrieval_context}"
+
         
         lc_messages = convert_openai_messages(messages)
         response = self.llm.invoke(lc_messages)

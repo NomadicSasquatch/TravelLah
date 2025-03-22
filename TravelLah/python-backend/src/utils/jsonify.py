@@ -25,7 +25,7 @@ def transform_frontend_to_backend_format_itinerary(payload):
     # Construct the transformed payload
     itinerary_params = {
         "userId": "U123",  # You might want to get this from authentication or user session
-        "tripId": "T123",  # This could be generated or retrieved from elsewhere
+        "tripId": "T151",  # This could be generated or retrieved from elsewhere
         "destination": payload.get("destination", ""),
         "num_days": num_days,
         "dates": formatted_dates,
