@@ -38,7 +38,7 @@ class PlannerPrompts:
     condition = (
         #"Your final output must be valid JSON with exactly two keys: 'chain_of_thought' and 'itinerary' where "
         "Your final output must be valid JSON 'itinerary' it has the keys 'userId',"
-        "'tripSerialNo', 'travelLocation', 'latitute', 'longitude', 'startDate', 'endDate' and 'tripFlow'."
+        "'tripSerialNo', 'travelLocation', 'latitude', 'longitude', 'startDate', 'endDate' and 'tripFlow'."
     )
 
     activity_context = (

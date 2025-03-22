@@ -100,7 +100,7 @@ async def update_activity(payload: Dict[str, Any]):
         itineraryupdate = ItineraryUpdateWorkflow.run(stream_options)
         
         app_logger.info("Successfully updated itinerary")
-        if mongoDB.insert(itineraryupdate):
+        if mongoDB.update(itineraryupdate):
             app_logger.info("Update itinerary into MongoDB")
         else:
             app_logger.error("Failed to update itinerary into MongoDB")
