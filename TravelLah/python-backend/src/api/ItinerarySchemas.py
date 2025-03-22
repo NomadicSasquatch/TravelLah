@@ -10,25 +10,25 @@ class StreamOptions(BaseModel):
 
 class ActivityContent(BaseModel):
     """Schema for an activity in the itinerary"""
-    specific_location: str
+    specificLocation: str
     address: str
     latitude: str
     longitude: str
-    start_time: str
-    end_time: str
-    activity_type: str
+    startTime: str
+    endTime: str
+    activityType: str
     notes: str
 
 class TripDay(BaseModel):
     """Schema for a day in the trip"""
     date: str
-    activity_content: List[ActivityContent]
+    activityContent: List[ActivityContent]
 
 class Itinerary(BaseModel):
     """Schema for the complete itinerary"""
     userId: str
     tripSerialNo: str
-    TravelLocation: str
+    travelLocation: str
     latitude: str
     longitude: str
     tripFlow: List[TripDay]

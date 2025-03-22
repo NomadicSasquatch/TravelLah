@@ -31,7 +31,7 @@ class Itinerary(BaseModel):
     """Schema for the complete itinerary"""
     userId: str
     tripSerialNo: str
-    TravelLocation: str
+    travelLocation: str
     latitude: str
     longitude: str
     tripFlow: List[TripDay]
