@@ -12,14 +12,14 @@ class StreamOptionsUpdate(BaseModel):
 
 class ActivityContent(BaseModel):
     """Schema for an activity in the itinerary"""
-    activityId : int
-    specific_location: str
+    activityId : str
+    specificLocation: str
     address: str
     latitude: str
     longitude: str
-    start_time: str
-    end_time: str
-    activity_type: str
+    startTime: str
+    endTime: str
+    activityType: str
     notes: str
 
 class TripDay(BaseModel):

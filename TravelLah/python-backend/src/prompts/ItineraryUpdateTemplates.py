@@ -47,8 +47,10 @@ class ItineraryUpdatePrompts:
     )
 
     RAW_TASK_TEMPLATE = (
-        "Suggest an alternative activity that is similar in nature to {activity} on {date}, near {address}. The activity should not exceed the timeframe of"
-        "{start_time} to {end_time}"
+        "Based on the existing itinerary for a trip to {travelLocation} and the scheduled activities for {date}, "
+        "suggest an alternative activity that is similar in nature to {activity} near {address}. The activity should not exceed the timeframe of between {start_time} and {end_time}."
+        "Ensure the alternative fits the overall plan of the trip and maintains consistency with the other activities."
     )
+
 
   

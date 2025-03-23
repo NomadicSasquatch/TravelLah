@@ -18,6 +18,7 @@ class ActivityContent(BaseModel):
     endTime: str
     activityType: str
     notes: str
+    activityId: str
 
 class TripDay(BaseModel):
     """Schema for a day in the trip"""

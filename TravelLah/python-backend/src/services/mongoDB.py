@@ -1,7 +1,7 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from src.settings.config import settings
-from src.settings.logging import app_logger as logger
+from src.settings.logging import app_logger
 import copy
 
 class MongoDB:
@@ -25,55 +25,37 @@ class MongoDB:
         except Exception as e:
             return False
         
-
-
     def update(self, updated_activity: dict) -> bool:
-        """
-        Update the activity within a trip's itinerary.
-
-        Parameters:
-            updated_activity (dict): The new data for the activity. Must include
-                "tripSerialNo" (the trip's identifier) and
-                "activityId" (the ID of the activity to update),
-                plus any other keys for the activity fields.
-
-        Returns:
-            bool: True if the update was successful, False otherwise.
-        """
         try:
-            # Extract the trip ID and activity ID from updated_activity
-            trip_id = updated_activity["tripSerialNo"]
-            activity_id = updated_activity["activityId"]
+            trip_id = str(updated_activity["tripSerialNo"])
+            activity_id = str(updated_activity["activityId"])
+            activity_date = updated_activity.get("date")
+            day_id = updated_activity.get("dayId")  # <-- ADDED: unique day identifier
+            if not activity_date or not day_id:
+                raise ValueError("Updated activity must include 'date' and 'dayId' fields.")
 
-            # Use array filters to match the nested activity inside tripFlow.activityContent
+            app_logger.info("Update query parameters: tripSerialNo=%s, dayId=%s, activityId=%s, date=%s", trip_id, day_id, activity_id, activity_date)
+
             result = self.collection.update_one(
+                {"tripSerialNo": trip_id},  # removed direct filtering on date
                 {
-                    "tripSerialNo": trip_id,
-                    "tripFlow.activityContent.activityId": activity_id
-                },
-                {
-                    "$set": {"tripFlow.$[outer].activityContent.$[inner]": updated_activity}
+                    "$set": {"tripFlow.$[day].activityContent.$[act]": updated_activity}
                 },
                 array_filters=[
-                    {"outer.activityContent": {"$elemMatch": {"activityId": activity_id}}},
-                    {"inner.activityId": activity_id}
+                    {"day.dayId": day_id},  # <-- CHANGED: now filtering by unique day identifier
+                    {"act.activityId": activity_id}
                 ]
             )
-
+            app_logger.info("Modified count: %s", result.modified_count)
             if result.modified_count > 0:
-                logger.info("Successfully updated activity %s in trip %s", activity_id, trip_id)
+                app_logger.info("Successfully updated activity %s in trip %s on day %s", activity_id, trip_id, day_id)
                 return True
             else:
-                logger.info("No document updated for trip %s and activity %s", trip_id, activity_id)
+                app_logger.info("No document updated for trip %s, day %s, and activity %s", trip_id, day_id, activity_id)
                 return False
-
         except Exception as e:
-            logger.error("Error updating document: %s", e)
+            app_logger.error("Error updating document: %s", e)
             return False
 
-
-    def close(self):
-        self.client.close()
-        logger.info("Closed connection to MongoDB")
-
+            
 mongoDB = MongoDB(settings.MONGODB_PASS)

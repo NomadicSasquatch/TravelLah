@@ -16,6 +16,9 @@ from src.settings.logging import app_logger
 from ..services.mongoDB import mongoDB
 from ..utils.jsonify import transform_frontend_to_backend_format_itinerary, transform_frontend_to_backend_format_updateActivity
 
+import logging
+import sys
+
 app = FastAPI(
     title="Travel Agent API", description="API for generating travel itineraries"
 )
@@ -27,21 +30,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 
+
+)
+
+logging.basicConfig(
+    level=logging.INFO,
+    stream=sys.stdout,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    force=True  # This forces the basic configuration, overriding any previous settings
 )
 
 @app.post("/itinerary")
-# async def create_itinerary(options: StreamOptions):
 async def create_itinerary(payload: Dict[str, Any]):
-    """
-    Generate a travel itinerary based on the provided options
-    
-    Args:
-        options: StreamOptions object with task and parameters
-    Returns:
-        Generated itinerary
-    """
-    # app_logger.info(f"Received itinerary request: {options.task[:50]}...")
-    
     transformed_payload = transform_frontend_to_backend_format_itinerary(payload)
     itinerary_params = transformed_payload.get("itinerary_params", {})
 
@@ -52,22 +52,29 @@ async def create_itinerary(payload: Dict[str, Any]):
         itinerary_params=itinerary_params
     )
 
-    app_logger.info(f"Received itinerary request with params: {itinerary_params}")   
-    
+    app_logger.info(f"Received itinerary request with params: {itinerary_params}")
+
     try:
-        # Convert Pydantic model to dict
         stream_options = options.model_dump()
-        
-        # Run the itinerary workflow
+        # Run the itinerary workflow (LLM calls, etc)
         itinerary = itinerary_workflow.run(stream_options)
-        
-        app_logger.info("Successfully generated itinerary")
+
+        ##########################################################################
+        # FIX: Assign a unique day identifier and ensure each activity ID is unique #
+        ##########################################################################
+        for day_index, day in enumerate(itinerary["tripFlow"], start=1):  # <-- CHANGED: iterate with index
+            day["dayId"] = f"DAY-{day_index}"  # <-- ADDED: unique day ID
+            for act_index, activity in enumerate(day["activityContent"], start=1):
+                # Compose activityId as {dayId}-ACT-{number}
+                activity["activityId"] = f"{day['dayId']}-ACT-{act_index}"  # <-- CHANGED: unique activity ID
+
+        app_logger.info("Successfully generated itinerary with unique day and activity IDs")
+
         if mongoDB.insert(itinerary):
             app_logger.info("Inserted itinerary into MongoDB")
         else:
             app_logger.error("Failed to insert itinerary into MongoDB")
 
-        app_logger.info("Returning itinerary")
         return itinerary
 
     except Exception as e:
@@ -75,72 +82,63 @@ async def create_itinerary(payload: Dict[str, Any]):
         app_logger.error(error_msg)
         raise HTTPException(status_code=400, detail=error_msg)
 
-#  update(self, trip_id: str, activity_id: int, updated_activity: dict) -> bool:
+
 @app.patch("/updateActivity")
 async def update_activity(payload: Dict[str, Any]):
-    """
-    1) Transform the frontend data into 'activity_params'
-    2) Run the itinerary update workflow to produce a refined activity
-    3) Attach 'tripSerialNo' and 'activityId' so that the DB can find the correct slot
-    4) Update the DB, and return the final updated activity
-    """
+    app_logger.info("Received activity update payload: %s", payload)
 
-    app_logger.info(f"Received activity update payload: {payload}...")
-
-    # 1) Extract tripSerialNo and activityId from the incoming payload
     trip_serial_no = payload.get("tripSerialNo")
     activity_id = payload.get("activityId")
-    if not trip_serial_no or activity_id is None:
-        # If these are missing, we won't be able to update the correct slot
+    activity_date = payload.get("date")
+    if not trip_serial_no or not activity_id or not activity_date:
         raise HTTPException(
             status_code=400,
-            detail="Payload must include 'tripSerialNo' and 'activityId'."
+            detail="Payload must include 'tripSerialNo', 'activityId', and 'date'."
         )
 
-    # 2) Transform the rest of the data into your internal structure
+    # Transform payload into internal structure
     transformed_payload = transform_frontend_to_backend_format_updateActivity(payload)
     activity_params = transformed_payload.get("activity_params", {})
 
-    # 3) Build your Pydantic input
     options = StreamOptionsUpdate(
-        task="",  # We can supply a custom prompt if desired
+        task="",
         max_revisions=1,
         revision_number=1,
         activity_params=activity_params
     )
 
-    app_logger.info(f"Running update workflow with activity_params: {activity_params}")
+    app_logger.info("Running update workflow with activity_params: %s", activity_params)
 
     try:
         stream_options = options.model_dump()
-
-        # 4) Run the update workflow, which produces the final "draft" activity JSON
-        #    returned as a Python dictionary
         itineraryupdate = ItineraryUpdateWorkflow.run(stream_options)
-
-        # 5) The returned 'itineraryupdate' usually won't contain tripSerialNo/activityId
-        #    by default — so we attach them here, so the DB's array_filters can locate
-        #    and update the correct activity
         itineraryupdate["tripSerialNo"] = trip_serial_no
         itineraryupdate["activityId"] = activity_id
+        itineraryupdate["date"] = activity_date
 
-        # 6) Update the DB
-        app_logger.info("Successfully updated itinerary in LLM. Now updating MongoDB...")
+        # Convert snake_case to camelCase if needed
+        if "specific_location" in itineraryupdate:
+            itineraryupdate["specificLocation"] = itineraryupdate.pop("specific_location")
+        if "start_time" in itineraryupdate:
+            itineraryupdate["startTime"] = itineraryupdate.pop("start_time")
+        if "end_time" in itineraryupdate:
+            itineraryupdate["endTime"] = itineraryupdate.pop("end_time")
+        if "activity_type" in itineraryupdate:
+            itineraryupdate["activityType"] = itineraryupdate.pop("activity_type")
+
+        app_logger.info("Final update object before DB update: %s", itineraryupdate)
+
         if mongoDB.update(itineraryupdate):
             app_logger.info("Successfully updated activity in MongoDB")
         else:
             app_logger.error("Failed to update activity in MongoDB")
-            # Return a 404 if no document was matched:
             raise HTTPException(
                 status_code=404,
                 detail=(
-                    f"No matching trip/activity found for tripSerialNo={trip_serial_no},"
-                    f" activityId={activity_id}"
+                    f"No matching trip/activity found for "
+                    f"tripSerialNo={trip_serial_no}, date={activity_date}, activityId={activity_id}"
                 )
             )
-
-        # 7) Return the final updated activity
-        return itineraryupdate
 
     except Exception as e:
         error_msg = f"Error updating activity: {str(e)}"
